@@ -1,0 +1,21 @@
+#:kivy 1.10.0
+
+<JapaneseVerbPractice>:
+    
+    Label:
+        id: show_question
+        font_size: 40
+        font_name: 'TakaoPMincho.ttf'
+        center_x: root.width /  2
+        center_y: root.height / 3 * 2
+        text: "1/100: ある的ます形"
+
+    TextInput:
+        id: user_input
+        multiline: False
+        size: root.width / 2, 80
+        font_size: 40
+        font_name: 'TakaoPMincho.ttf'
+        center_x: root.width / 2
+        center_y: root.height / 3
+        text: "Input answer here"
