@@ -1,21 +1,52 @@
 #:kivy 1.10.0
 
 <JapaneseVerbPractice>:
-    
+    jvp_question: question_0
+    jvp_answer: answer_0
+    jvp_check: check_0
+    jvp_error: error_0
+    jvp_initial: initial_0
+    on_touch_down: root.refresh()
+
     Label:
-        id: show_question
+        id: initial_0
+        font_size: 30
+        center_x: root.width / 2
+        center_y: root.height / 3 * 2
+        text: root.jvp_initial.text
+
+    Label:
+        id: question_0
         font_size: 40
         font_name: 'TakaoPMincho.ttf'
         center_x: root.width /  2
         center_y: root.height / 3 * 2
-        text: "1/100: ある的ます形"
+        text: root.jvp_question.text
+
+    Label:
+        id: check_0
+        font_size: 40
+        center_x: root.jvp_answer.right + 50
+        center_y: root.jvp_answer.center_y
+        text: root.jvp_check.text
+        makrup: True
+
+    Label:
+        id: error_0
+        font_size: 40
+        center_x: root.jvp_answer.center_x
+        center_y: root.jvp_answer.center_y - 80
+        text: root.jvp_error.text
 
     TextInput:
-        id: user_input
+        id: answer_0
         multiline: False
         size: root.width / 2, 80
         font_size: 40
         font_name: 'TakaoPMincho.ttf'
         center_x: root.width / 2
         center_y: root.height / 3
-        text: "Input answer here"
+        #text: root.jvp_answer.text
+        on_text_validate: root.get_text()
+        #text_validate_unfocus: False
+        focus: root.jvp_answer.focus
