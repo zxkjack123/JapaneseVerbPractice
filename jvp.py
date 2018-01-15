@@ -144,6 +144,10 @@ class Verb(object):
             self.turn_to_te()
             return
 
+        if self.verb_form == 'た形':
+            self.turn_to_ta()
+            return
+
         raise ValueError('Unsupported form')
 
 
@@ -217,6 +221,47 @@ class Verb(object):
                 self.right_answer.append('きて')
             if self.verb_base == 'する':
                 self.right_answer.append('して')
+
+    def turn_to_ta(self):
+        '''
+        Turn a verb into て形 (te type)
+        '''
+        if self.verb_type == 1:
+            append_item = ''
+            if self.verb_base[-3:] in ('う', 'つ', 'る'):
+                append_item = 'った'
+            if self.verb_base[-3:] in ('ぶ', 'む', 'ぬ'):
+                append_item = 'んだ'
+            if self.verb_base[-3:] == 'く':
+                append_item = 'いた'
+            if self.verb_base[-3:] == 'ぐ':
+                append_item = 'いだ'
+            if self.verb_base[-3:] == 'す':
+                append_item = 'した'
+
+            if self.verb_kanji:
+                kanji_answer = self.verb_kanji[0:-3] + append_item
+                if self.verb_kanji == '行く':
+                    kanji_answer = '行った'
+                self.right_answer.append(kanji_answer)
+            hira_answer = self.verb_base[0:-3] + append_item
+            if self.verb_base == 'いく':
+                hira_answer = 'いった'
+            self.right_answer.append(hira_answer)
+
+        if self.verb_type == 2:
+            if self.verb_kanji:
+                kanji_answer = self.verb_kanji[0:-3] + 'た'
+                self.right_answer.append(kanji_answer)
+            hira_answer = self.verb_base[0:-3] + 'た'
+            self.right_answer.append(hira_answer)
+
+        if self.verb_type == 3:
+            if self.verb_base == 'くる':
+                self.right_answer.append('来た')
+                self.right_answer.append('きた')
+            if self.verb_base == 'する':
+                self.right_answer.append('した')
 
     def get_verb_type(self):
         '''
