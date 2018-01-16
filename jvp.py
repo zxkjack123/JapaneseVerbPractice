@@ -6,16 +6,6 @@ import numpy as np
 import pandas as pd
 import random
 
-#a_col = ('あ', 'か', 'さ', 'た', 'な', 'は', 'ま', 'や', 'ら', 'わ', \
-#               'が', 'ざ', 'だ', 'ば', 'ぱ')
-#i_col = ('い', 'き', 'し', 'ち', 'に', 'ひ', 'み', 'り', 'ぎ', 'じ', \
-#         'ぢ', 'び', 'ぴ')
-#u_col = ('う', 'く', 'ぐ', 'す', 'ず', 'つ', 'づ', 'ぬ', 'ふ', 'ぶ', \
-#         'ぷ', 'む', 'ゆ', 'る')
-#e_col = ('え', 'け', 'せ', 'て', 'ね', 'へ', 'め', 'れ', 'げ', 'ぜ', \
-#         'で', 'べ', 'ぺ')
-#o_col = ('お', 'こ', 'そ', 'と', 'の', 'ほ', 'も', 'よ', 'ろ', 'を', \
-#         'ご', 'ぞ', 'ど', 'ぼ', 'ぽ')
 hiragana_array = np.array([
     ['あ', 'い', 'う', 'え', 'お'],
     ['か', 'き', 'く', 'け', 'こ'],
@@ -134,7 +124,6 @@ class Verb(object):
         '''
         Get the right_answer according to the base and form
         '''
-        #import pdb; pdb.set_trace()
         self.get_verb_type()
         if self.verb_form == 'ます':
             self.turn_to_masu()
@@ -160,7 +149,6 @@ class Verb(object):
         Turn a verb into ます形 (masu type)
         '''
         if self.verb_type == 1:
-            #import pdb; pdb.set_trace()
             last_hira = self.verb_base[-3:]
             hira = Hiragana(last_hira)
             hira.change_vowel('i')
@@ -299,9 +287,9 @@ class Verb(object):
     def get_verb_type(self):
         '''
         Calculate the verb type
-        1: 动1
-        2: 动2
-        3: 动3
+        1: 动1, v1
+        2: 动2, v2
+        3: 动3, v3
         '''
         if self.verb_base in ('する', 'くる'):
             self.verb_type = 3
@@ -460,11 +448,8 @@ Please enter a int number: '
         '''
         for i in range(self.total_quiz_number):
             verb = self.sample_verb()
-            #print verb
-            #verb.give_quiz_info()
             verb.get_user_answer()
             verb.get_right_answer()
-            #print verb
             verb.check_answer()
             #v.record()
 
@@ -488,8 +473,6 @@ def sample_from_list(l):
     return index
 
 if __name__ == '__main__':
-    #print hiragana_table.loc['g', :]
-    #print hiragana_table.index.values
     practice = Practice()
     practice.initial()
     practice.perform_quiz()
