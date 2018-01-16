@@ -136,16 +136,20 @@ class Verb(object):
         '''
         #import pdb; pdb.set_trace()
         self.get_verb_type()
-        if self.verb_form == 'ます形':
+        if self.verb_form == 'ます':
             self.turn_to_masu()
             return
 
-        if self.verb_form == 'て形':
+        if self.verb_form == 'て':
             self.turn_to_te()
             return
 
-        if self.verb_form == 'た形':
+        if self.verb_form == 'た':
             self.turn_to_ta()
+            return
+
+        if self.verb_form == 'ない':
+            self.turn_to_nai()
             return
 
         raise ValueError('Unsupported form')
@@ -161,13 +165,13 @@ class Verb(object):
             hira = Hiragana(last_hira)
             hira.change_vowel('i')
             hira_answer = self.verb_base[0:-3] + hira.hiragana + 'ます'
-            if self.verb_kanji != None:
+            if self.verb_kanji:
                 kanji_answer = self.verb_kanji[0:-3] + hira.hiragana + 'ます'
                 self.right_answer.append(kanji_answer)
             self.right_answer.append(hira_answer)
         if self.verb_type == 2:
             hira_answer = self.verb_base[0:-3] + 'ます'
-            if self.verb_kanji != None:
+            if self.verb_kanji:
                 kanji_answer = self.verb_kanji[0:-3] + 'ます'
                 self.right_answer.append(kanji_answer)
             self.right_answer.append(hira_answer)
@@ -176,7 +180,7 @@ class Verb(object):
             hira = Hiragana(last_second_hira)
             hira.change_vowel('i')
             hira_answer = hira.hiragana + 'ます'
-            if self.verb_kanji != None:
+            if self.verb_kanji:
                 kanji_answer = self.verb_kanji[0:-3]+ 'ます'
                 self.right_answer.append(kanji_answer)
             self.right_answer.append(hira_answer)
@@ -263,6 +267,35 @@ class Verb(object):
             if self.verb_base == 'する':
                 self.right_answer.append('した')
 
+    def turn_to_nai(self):
+        '''
+        Turn a verb into ない形 (nai type)
+        '''
+        if self.verb_type == 1:
+            last_hira = self.verb_base[-3:]
+            hira = Hiragana(last_hira)
+            hira.change_vowel('a')
+            if hira.hiragana == 'あ':
+                hira.hiragana == 'わ'
+            hira_answer = self.verb_base[0:-3] + hira.hiragana + 'ない'
+            if self.verb_kanji:
+                kanji_answer = self.verb_kanji[0:-3] + hira.hiragana + 'ない'
+                self.right_answer.append(kanji_answer)
+            self.right_answer.append(hira_answer)
+        if self.verb_type == 2:
+            hira_answer = self.verb_base[0:-3] + 'ない'
+            if self.verb_kanji:
+                kanji_answer = self.verb_kanji[0:-3] + 'ない'
+                self.right_answer.append(kanji_answer)
+            self.right_answer.append(hira_answer)
+        if self.verb_type == 3:
+            if self.verb_base == 'くる':
+                self.right_answer.append('来ない')
+                self.right_answer.append('こない')
+            if self.verb_base == 'する':
+                self.right_answer.append('しない')
+
+
     def get_verb_type(self):
         '''
         Calculate the verb type
@@ -342,10 +375,10 @@ class Verb(object):
         Give the quiz information, and then get the user answer
         '''
         if self.verb_kanji == None:
-            message = ''.join(['\nPlease enter the ', self.verb_form, ' of ',\
+            message = ''.join(['\nPlease enter the ', self.verb_form, '形 of ',\
                                self.verb_base, ': '])
         else:
-            message = ''.join(['\nPlease enter the ', self.verb_form, ' of ',\
+            message = ''.join(['\nPlease enter the ', self.verb_form, '形 of ',\
                                self.verb_kanji, ' (', self.verb_base, '): '])
         self.user_answer = get_input(message)
 
