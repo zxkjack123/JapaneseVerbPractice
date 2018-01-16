@@ -216,7 +216,7 @@ class Verb(object):
 
     def turn_to_ta(self):
         '''
-        Turn a verb into て形 (te type)
+        Turn a verb into た形 (ta type)
         '''
         if self.verb_type == 1:
             append_item = ''
@@ -304,7 +304,7 @@ class Verb(object):
                 if hira.vowel in ('う', 'あ', 'お' ):
                     self.verb_type = 1
                 else:
-                    if self.verb_base in speacial_v1:
+                    if self.verb_kanji in speacial_v1:
                         self.verb_type = 1
                     else:
                         self.verb_type = 2

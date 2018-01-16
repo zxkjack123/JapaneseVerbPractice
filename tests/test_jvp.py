@@ -25,6 +25,26 @@ def hiragana_change_vowel_test():
     hira.change_vowel('o')
     assert_equal(hira.hiragana, 'こ')
 
+def get_verb_type_test():
+    '''
+    Calculate the type of verb
+    '''
+    verb1 = Verb('かく', '書く', 'ます')
+    verb1.get_verb_type()
+    assert_equal(verb1.verb_type, 1)
+
+    verb_s1 = Verb('きる', '切る', 'ます')
+    verb_s1.get_verb_type()
+    assert_equal(verb_s1.verb_type, 1)
+
+    verb2 = Verb('みる', '見る', 'ます')
+    verb2.get_verb_type()
+    assert_equal(verb2.verb_type, 2)
+
+    verb3 = Verb('くる', '来る', 'ます')
+    verb3.get_verb_type()
+    assert_equal(verb3.verb_type, 3)
+
 def verb_trun_to_masu_test():
     '''
     Test convert a verb into ます形 (masu type)
