@@ -101,6 +101,10 @@ def verb_turn_to_nai_test():
     verb1.get_right_answer()
     assert_equal(verb1.right_answer, ['書かない', 'かかない'])
 
+    verb11 = Verb('うたう', '歌う', 'ない')
+    verb11.get_right_answer()
+    assert_equal(verb11.right_answer, ['歌わない', 'うたわない'])
+
     verb2 = Verb('みる', '見る', 'ない')
     verb2.get_right_answer()
     assert_equal(verb2.right_answer, ['見ない', 'みない'])

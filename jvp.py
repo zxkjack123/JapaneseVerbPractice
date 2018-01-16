@@ -264,7 +264,7 @@ class Verb(object):
             hira = Hiragana(last_hira)
             hira.change_vowel('a')
             if hira.hiragana == 'あ':
-                hira.hiragana == 'わ'
+                hira.hiragana = 'わ'
             hira_answer = self.verb_base[0:-3] + hira.hiragana + 'ない'
             if self.verb_kanji:
                 kanji_answer = self.verb_kanji[0:-3] + hira.hiragana + 'ない'
