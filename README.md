@@ -1,6 +1,5 @@
 # JapaneseVerbPractice
-This is a python script that helps beginning learner to practice Japanese verb
-conjugation.
+This is a python script that helps myself practicing Japanese verb conjugation.
 
 Japanese verbs can represent different states (tense, voice, and
 politeness), they are the essential part of a sentence.
@@ -9,7 +8,10 @@ However, there are too many verbs, and different conjugation forms have
 different conjugation rules. Memorizing Japanese verbs are regard as the
 most challenging part for the beginners.
 
-This script helps beginners to practice Japanese verb conjugation.
+This script may also helpful for other Japanese beginners (especially Chinese)
+to practice Japanese verb conjugation.
+
+*Note: All conjugations are based on 基本形 (or 字典形, Dictionary-form).*
 
 ## Usage
 1. Clone this repository to your local machine
