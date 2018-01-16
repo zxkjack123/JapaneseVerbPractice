@@ -4,6 +4,21 @@
 from nose.tools import *
 from ..jvp import *
 
+def sample_from_list_test():
+    '''
+    Test sampling form list
+    '''
+    N = 5000
+    score = 1.0/N
+    l = ['A', 'B', 'C', 'D']
+    tally = [0.0] * len(l)
+    for i in range(N):
+        index = sample_from_list(l)
+        tally[index] += score
+    # check the result
+    for t in tally:
+        assert(abs(t - 1.0/len(l)) / (1.0/len(l)) < 0.05)
+
 def hiragana_change_vowel_test():
     '''
     Test to change a hiragana to another vowel
