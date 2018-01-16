@@ -11,7 +11,8 @@ most challenging part for the beginners.
 This script may also helpful for other Japanese beginners (especially Chinese)
 to practice Japanese verb conjugation.
 
-*Note: All conjugations are based on 基本形 (or 字典形, Dictionary-form).*
+*Note: All conjugations are based on 基本形 (or 字典形, Dictionary-form).* 
+**This script is wrote on Linux system base on Python 2.7.**
 
 ## Usage
 1. Clone this repository to your local machine
