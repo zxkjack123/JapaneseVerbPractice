@@ -1,7 +1,7 @@
 # usr/bin/evn python
 # -*- coding:utf-8 -*-
 
-import os.path
+import os
 from sys import version_info
 import numpy as np
 import pandas as pd
@@ -348,14 +348,12 @@ class Practice(object):
         self.verbs_error = None
         self.current_quiz_number = 0
         self.practice_history = None
+        self.initial()
 
     def initial(self):
         '''
         Initial the quiz
         '''
-        total_quiz_number_help_info = 'How many verb do you want to practice? \
-Please enter a int number: '
-        self.total_quiz_number = int(get_input(total_quiz_number_help_info))
         self.read_verb_lib()
         self.read_form_lib()
         self.load_practice_history()
@@ -472,6 +470,9 @@ Please enter a int number: '
         Give quiz info, ask user input answer
         Check answer and record
         '''
+        total_quiz_number_help_info = 'How many verb do you want to practice? \
+Please enter a int number: '
+        self.total_quiz_number = int(get_input(total_quiz_number_help_info))
         for i in range(self.total_quiz_number):
             verb = self.sample_verb()
             verb.get_user_answer()
@@ -486,40 +487,53 @@ Please enter a int number: '
         relative_weight
         '''
         # Find the index of the verb
+        index = self.find_verb_in_practice_history(verb)
+        self.practice_history.loc[index, 'sample_time'] += 1
+        if verb.error_flag:
+            self.practice_history.loc[index, 'error_time'] += 1
+            self.practice_history.loc[index, 'continue_error_time'] += 1
+            self.practice_history.loc[index, 'continue_right_time'] = 0
+        else:
+            self.practice_history.loc[index, 'right_time'] += 1
+            self.practice_history.loc[index, 'continue_right_time'] += 1
+            if self.practice_history.loc[index, 'continue_right_time'] > 5:
+                self.practice_history.loc[index, 'continue_right_time'] = 0
+                self.practice_history.loc[index, 'error_time'] = 0
+            self.practice_history.loc[index, 'continue_error_time'] = 0
+        # calculate the relative weight
+        # relative_weight = [1 +(5*continue_error_time) + (3*error_time)] /
+        #                   [ 1 + sample_time + right_time + 2*continue_right_time]
+        self.practice_history.loc[index, 'relative_weight'] = \
+            (1.0 + self.practice_history.loc[index, 'error_time'] * 3.0 +
+             self.practice_history.loc[index, 'continue_error_time'] * 5.0) / \
+            (1.0 + self.practice_history.loc[index, 'sample_time'] +
+             self.practice_history.loc[index, 'right_time'] +
+             self.practice_history.loc[index, 'continue_right_time'] * 2)
+        self.practice_history.to_csv('practice_history.csv')
+
+    def find_verb_in_practice_history(self, verb):
+        '''
+        Find the verb in the practice history
+        return the index number
+        '''
         verb_index = self.practice_history.verb_base[
             self.practice_history.verb_base == verb.verb_base].index.tolist()
         form_index = self.practice_history.verb_form[
             self.practice_history.verb_form == verb.verb_form].index.tolist()
-        found_index = list(set.intersection(set(verb_index), set(form_index)))
+        kanji_index = self.practice_history.verb_kanji[
+            self.practice_history.verb_kanji == verb.verb_kanji].index.tolist()
+        found_index = list(set.intersection(set(verb_index), set(form_index),
+                                            set(kanji_index)))
         if len(found_index) == 1:
-            # found the verb
             index = found_index[0]
-            self.practice_history.loc[index, 'sample_time'] += 1
-            if verb.error_flag:
-                self.practice_history.loc[index, 'error_time'] += 1
-                self.practice_history.loc[index, 'continue_error_time'] += 1
-                self.practice_history.loc[index, 'continue_right_time'] = 0
-            else:
-                self.practice_history.loc[index, 'right_time'] += 1
-                self.practice_history.loc[index, 'continue_right_time'] += 1
-                if self.practice_history.loc[index, 'continue_right_time'] > 5:
-                    self.practice_history.loc[index, 'continue_right_time'] = 0
-                    self.practice_history.loc[index, 'error_time'] = 0
-                self.practice_history.loc[index, 'continue_error_time'] = 0
-            # calculate the relative weight
-            # relative_weight = [1 +(5*continue_error_time) + (3*error_time)] /
-            #                   [ 1 + sample_time + right_time + 2*continue_right_time]
-            self.practice_history.loc[index, 'relative_weight'] = \
-                (1.0 + self.practice_history.loc[index, 'error_time'] * 3.0 +
-                 self.practice_history.loc[index, 'continue_error_time'] * 5.0) / \
-                (1.0 + self.practice_history.loc[index, 'sample_time'] +
-                 self.practice_history.loc[index, 'right_time'] +
-                 self.practice_history.loc[index, 'continue_right_time'] * 2)
+            return index
         else:
             errormessage = ''.join(['Found more than one verb:', verb.verb_base,
-                                    verb.verb_form, '形 in practice_history!'])
+                                    verb.verb_kanji, '的', verb.verb_form,
+                                    '形 in practice_history!'])
             raise ValueError(errormessage)
-        self.practice_history.to_csv('practice_history.csv')
+            return -1
+
 
 # Random-number sampling using the Walker-Vose alias method,
 # Copyright: Joachim Wuttke, Forschungszentrum Juelich GmbH (2013)
@@ -617,5 +631,4 @@ def biased_verb_sample(p):
 
 if __name__ == '__main__':
     practice = Practice()
-    practice.initial()
     practice.perform_quiz()

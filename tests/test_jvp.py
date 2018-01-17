@@ -120,7 +120,6 @@ def test_alias_table():
     """
     seed(1953)
     pdf = [0.1, 0.2, 0.7]
-    #import pdb; pdb.set_trace()
     at = AliasTable(pdf)
     num_samples = 50000
     score = 1.0/num_samples
@@ -133,5 +132,13 @@ def test_alias_table():
     for i in range(0, 3):
        assert(abs(tally[i] - pdf[i])/pdf[i] < 0.05)
 
+def find_verb_in_practice_history_test():
+    '''
+    This function test that a verb can be find out in the practice history
+    '''
+    verb = Verb('とる', '撮る', 'ます')
+    p = Practice()
+    index = p.find_verb_in_practice_history(verb)
+    assert(index >= 0)
 
 
