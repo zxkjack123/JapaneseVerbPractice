@@ -33,7 +33,7 @@ supported, as they are the content of "标准日本语初级上册". Also, I wil
 other conjugation forms when I learned more.
 
 ## To do list
-- [  ] Add error history records. Increase the practice time of the verbs that
+- [x] Add error history records. Increase the practice time of the verbs that
 user made mistake.
 - [  ] Find voice resources of the verbs, play the voice when the question
 jumps out. Add listening practice.

@@ -3,21 +3,7 @@
 
 from nose.tools import *
 from ..jvp import *
-
-def sample_from_list_test():
-    '''
-    Test sampling form list
-    '''
-    N = 5000
-    score = 1.0/N
-    l = ['A', 'B', 'C', 'D']
-    tally = [0.0] * len(l)
-    for i in range(N):
-        index = sample_from_list(l)
-        tally[index] += score
-    # check the result
-    for t in tally:
-        assert(abs(t - 1.0/len(l)) / (1.0/len(l)) < 0.05)
+from random import uniform, seed
 
 def hiragana_change_vowel_test():
     '''
@@ -127,6 +113,25 @@ def verb_turn_to_nai_test():
     verb3 = Verb('くる', '来る', 'ない')
     verb3.get_right_answer()
     assert_equal(verb3.right_answer, ['来ない', 'こない'])
+
+def test_alias_table():
+    """This tests that the AliasTable class produces samples in the ratios
+    consistent with the supplied PDF.
+    """
+    seed(1953)
+    pdf = [0.1, 0.2, 0.7]
+    #import pdb; pdb.set_trace()
+    at = AliasTable(pdf)
+    num_samples = 50000
+    score = 1.0/num_samples
+    tally = np.zeros(shape=(3))
+
+    for i in range(num_samples):
+        s = at.sample_pdf()
+        tally[s] += score
+
+    for i in range(0, 3):
+       assert(abs(tally[i] - pdf[i])/pdf[i] < 0.05)
 
 
 

@@ -433,11 +433,10 @@ Please enter a int number: '
         '''
         Choose a verb according to the sample history
         '''
-        index = sample_from_list(self.verbs_base_avail)
-        verb_base = self.verbs_base_avail[index]
-        verb_kanji = self.verbs_kanji_avail[index]
-        verb_form_index = sample_from_list(self.verbs_form_avail)
-        verb_form = self.verbs_form_avail[verb_form_index]
+        index = biased_verb_sample(self.practice_history['relative_weight'].tolist())
+        verb_base = self.practice_history.loc[index, 'verb_base']
+        verb_kanji = self.practice_history.loc[index, 'verb_kanji']
+        verb_form = self.practice_history.loc[index, 'verb_form']
         verb = Verb(verb_base, verb_kanji, verb_form)
         self.verbs.append(verb)
         return verb
@@ -522,6 +521,72 @@ Please enter a int number: '
             raise ValueError(errormessage)
         self.practice_history.to_csv('practice_history.csv')
 
+# Random-number sampling using the Walker-Vose alias method,
+# Copyright: Joachim Wuttke, Forschungszentrum Juelich GmbH (2013)
+# M. D. Vose, IEEE T. Software Eng. 17, 972 (1991)
+# A. J. Walker, Electronics Letters 10, 127 (1974); ACM TOMS 3, 253 (1977)
+class AliasTable(object):
+    '''
+    Class AliasTable
+    '''
+    def __init__(self, pdf):
+        self.p = pdf[:]
+        self.alias = None
+        self.prob = None
+        self.calc_alias()
+
+    def calc_alias(self):
+        n = len(self.p)
+        self.prob = [0.0] * n
+        self.alias = [0] * n
+        small = [0.0] * n
+        large = [0.0] * n
+        for i in range(n):
+            self.p[i] *= n
+
+         # Set separate index lists for small and large probabilities:
+        n_s, n_l = 0, 0
+        for i in range(n-1, -1, -1):
+            if self.p[i] < 1:
+                small[n_s] = i
+                n_s += 1
+            else:
+               large[n_l] = i
+               n_l += 1
+
+        # Work through index lists
+        while n_s and n_l:
+            n_s -= 1
+            a = small[n_s]
+            n_l -= 1
+            g = large[n_l]
+            self.prob[a] = self.p[a]
+            self.alias[a] = g
+            self.p[g] = self.p[g] + self.p[a] - 1
+            if self.p[g] < 1:
+                small[n_s] = g
+                n_s += 1
+            else:
+                large[n_l] = g
+                n_l += 1
+
+        while n_l:
+            n_l -= 1
+            self.prob[large[n_l]] = 1
+
+        while n_s:
+          # can only happen through numeric instability
+            n_s -= 1
+            self.prob[small[n_s] ] = 1;
+
+    def sample_pdf(self):
+        rand1 = random.random()
+        rand2 = random.random()
+        i = int(len(self.p) * rand1)
+        if rand2 < self.prob[i]:
+            return i
+        else:
+            return self.alias[i]
 
 def get_input(info):
     '''
@@ -535,11 +600,19 @@ def get_input(info):
         response = raw_input(info)
     return response
 
-def sample_from_list(l):
+def biased_verb_sample(p):
     '''
     Uniformly sample a entity from a list
     '''
-    index = int(random.random() * len(l))
+    # normalize p
+    sum_p = 0.0
+    for i in range(len(p)):
+        sum_p += p[i]
+    for i in range(len(p)):
+        p[i] = p[i] / sum_p
+    at = AliasTable(p)
+    index = at.sample_pdf()
+    #index = int(random.random() * len(l))
     return index
 
 if __name__ == '__main__':
