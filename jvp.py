@@ -93,6 +93,10 @@ class Verb(object):
         self.right_answer = []
         self.error_flag = False
         self.user_answer = None
+        if self.verb_kanji != None and isinstance(self.verb_kanji, str):
+            self.has_kanji = True
+        else:
+            self.has_kanji = False
 
     def __str__(self):
         '''
@@ -100,7 +104,7 @@ class Verb(object):
         '''
         message = None
         verb_content = ''
-        if self.verb_kanji != None:
+        if self.has_kanji:
             verb_content = self.verb_kanji + ' (' + self.verb_base + ')'
         else:
             verb_content = self.verb_base
@@ -146,13 +150,13 @@ class Verb(object):
             hira = Hiragana(last_hira)
             hira.change_vowel('i')
             hira_answer = self.verb_base[0:-3] + hira.hiragana + 'ます'
-            if self.verb_kanji:
+            if self.has_kanji:
                 kanji_answer = self.verb_kanji[0:-3] + hira.hiragana + 'ます'
                 self.right_answer.append(kanji_answer)
             self.right_answer.append(hira_answer)
         if self.verb_type == 2:
             hira_answer = self.verb_base[0:-3] + 'ます'
-            if self.verb_kanji:
+            if self.has_kanji:
                 kanji_answer = self.verb_kanji[0:-3] + 'ます'
                 self.right_answer.append(kanji_answer)
             self.right_answer.append(hira_answer)
@@ -161,7 +165,7 @@ class Verb(object):
             hira = Hiragana(last_second_hira)
             hira.change_vowel('i')
             hira_answer = hira.hiragana + 'ます'
-            if self.verb_kanji:
+            if self.has_kanji:
                 kanji_answer = self.verb_kanji[0:-3]+ 'ます'
                 self.right_answer.append(kanji_answer)
             self.right_answer.append(hira_answer)
@@ -183,7 +187,7 @@ class Verb(object):
             if self.verb_base[-3:] == 'す':
                 append_item = 'して'
 
-            if self.verb_kanji:
+            if self.has_kanji:
                 kanji_answer = self.verb_kanji[0:-3] + append_item
                 if self.verb_kanji == '行く':
                     kanji_answer = '行って'
@@ -194,7 +198,7 @@ class Verb(object):
             self.right_answer.append(hira_answer)
 
         if self.verb_type == 2:
-            if self.verb_kanji:
+            if self.has_kanji:
                 kanji_answer = self.verb_kanji[0:-3] + 'て'
                 self.right_answer.append(kanji_answer)
             hira_answer = self.verb_base[0:-3] + 'て'
@@ -224,7 +228,7 @@ class Verb(object):
             if self.verb_base[-3:] == 'す':
                 append_item = 'した'
 
-            if self.verb_kanji:
+            if self.has_kanji:
                 kanji_answer = self.verb_kanji[0:-3] + append_item
                 if self.verb_kanji == '行く':
                     kanji_answer = '行った'
@@ -235,7 +239,7 @@ class Verb(object):
             self.right_answer.append(hira_answer)
 
         if self.verb_type == 2:
-            if self.verb_kanji:
+            if self.has_kanji:
                 kanji_answer = self.verb_kanji[0:-3] + 'た'
                 self.right_answer.append(kanji_answer)
             hira_answer = self.verb_base[0:-3] + 'た'
@@ -259,13 +263,13 @@ class Verb(object):
             if hira.hiragana == 'あ':
                 hira.hiragana = 'わ'
             hira_answer = self.verb_base[0:-3] + hira.hiragana + 'ない'
-            if self.verb_kanji:
+            if self.has_kanji:
                 kanji_answer = self.verb_kanji[0:-3] + hira.hiragana + 'ない'
                 self.right_answer.append(kanji_answer)
             self.right_answer.append(hira_answer)
         if self.verb_type == 2:
             hira_answer = self.verb_base[0:-3] + 'ない'
-            if self.verb_kanji:
+            if self.has_kanji:
                 kanji_answer = self.verb_kanji[0:-3] + 'ない'
                 self.right_answer.append(kanji_answer)
             self.right_answer.append(hira_answer)
@@ -325,12 +329,13 @@ class Verb(object):
         '''
         Give the quiz information, and then get the user answer
         '''
-        if self.verb_kanji == None:
-            message = ''.join(['\nPlease enter the ', self.verb_form, '形 of ',\
-                               self.verb_base, ': '])
-        else:
+        print self.verb_base, self.verb_kanji
+        if self.has_kanji:
             message = ''.join(['\nPlease enter the ', self.verb_form, '形 of ',\
                                self.verb_kanji, ' (', self.verb_base, '): '])
+        else:
+            message = ''.join(['\nPlease enter the ', self.verb_form, '形 of ',\
+                               self.verb_base, ': '])
         self.user_answer = get_input(message)
 
 
@@ -472,7 +477,9 @@ class Practice(object):
         '''
         total_quiz_number_help_info = 'How many verb do you want to practice? \
 Please enter a int number: '
-        self.total_quiz_number = int(get_input(total_quiz_number_help_info))
+        input_string = get_input(total_quiz_number_help_info)
+        input_string = input_string.strip()
+        self.total_quiz_number = int(input_string)
         for i in range(self.total_quiz_number):
             verb = self.sample_verb()
             verb.get_user_answer()
@@ -522,15 +529,25 @@ Please enter a int number: '
             self.practice_history.verb_form == verb.verb_form].index.tolist()
         kanji_index = self.practice_history.verb_kanji[
             self.practice_history.verb_kanji == verb.verb_kanji].index.tolist()
-        found_index = list(set.intersection(set(verb_index), set(form_index),
-                                            set(kanji_index)))
+        if verb.has_kanji:
+            found_index = list(set.intersection(set(verb_index), set(form_index),
+                                                set(kanji_index)))
+        else:
+            found_index = list(set.intersection(set(verb_index), set(form_index)))
+
         if len(found_index) == 1:
             index = found_index[0]
             return index
         else:
-            errormessage = ''.join(['Found more than one verb:', verb.verb_base,
-                                    verb.verb_kanji, '的', verb.verb_form,
-                                    '形 in practice_history!'])
+            if verb.has_kanji:
+                errormessage = ''.join(['Found more than one verb:', verb.verb_base,
+                                        verb.verb_kanji, '的', verb.verb_form,
+                                        '形 in practice_history!'])
+            else:
+                errormessage = ''.join(['Found more than one verb:', verb.verb_base,
+                                        '的', verb.verb_form,
+                                        '形 in practice_history!'])
+            print found_index
             raise ValueError(errormessage)
             return -1
 
