@@ -1,10 +1,12 @@
 # usr/bin/evn python
 # -*- coding:utf-8 -*-
 
+import os.path
 from sys import version_info
 import numpy as np
 import pandas as pd
 import random
+import csv
 
 hiragana_array = np.array([
     ['あ', 'い', 'う', 'え', 'お'],
@@ -70,7 +72,6 @@ class Hiragana(object):
         if self.consonant == None:
             raise ValueError('Something wrong')
 
-
     def change_vowel(self, vowel):
         self.get_consonant()
         self.hiragana = hiragana_table.loc[self.consonant, vowel]
@@ -103,7 +104,6 @@ class Verb(object):
             verb_content = self.verb_kanji + ' (' + self.verb_base + ')'
         else:
             verb_content = self.verb_base
-
         right_answer = '[]'
         if self.right_answer != None:
             right_answer = '['
@@ -113,12 +113,10 @@ class Verb(object):
                 else:
                     right_answer = ' '.join([right_answer, 'or', answer])
             right_answer = ''.join([right_answer, ']'])
-
         message = ''.join(['verb: ', verb_content, \
                            ', required form: ', self.verb_form, \
                            ', right answer: ', right_answer])
         return message
-
 
     def get_right_answer(self):
         '''
@@ -128,21 +126,16 @@ class Verb(object):
         if self.verb_form == 'ます':
             self.turn_to_masu()
             return
-
         if self.verb_form == 'て':
             self.turn_to_te()
             return
-
         if self.verb_form == 'た':
             self.turn_to_ta()
             return
-
         if self.verb_form == 'ない':
             self.turn_to_nai()
             return
-
         raise ValueError('Unsupported form')
-
 
     def turn_to_masu(self):
         '''
@@ -283,7 +276,6 @@ class Verb(object):
             if self.verb_base == 'する':
                 self.right_answer.append('しない')
 
-
     def get_verb_type(self):
         '''
         Calculate the verb type
@@ -314,8 +306,9 @@ class Verb(object):
         Check the user_answer with the right_answer, and set the error flag
         '''
         if self.user_answer in self.right_answer:
-            pass
+            self.error_flag = False
         else:
+            self.error_flag = True
             right_answer = '[]'
             if self.right_answer:
                 right_answer = '['
@@ -327,36 +320,6 @@ class Verb(object):
                 right_answer = ''.join([right_answer, ']'])
             errormessage = ''.join(['Wrong answer! Correct answer: ', right_answer])
             print errormessage
-
-    def read_error_log(self):
-        '''
-        Read the error log
-        '''
-        pass
-
-    def record_error_log(self):
-        '''
-        Record the error log, for the better practice
-        '''
-        pass
-
-    def record_continue_right_log(self):
-        '''
-        Read the continue right log, 5 continue right make a reduce in error log
-        '''
-        pass
-
-    def read_sample_log(self):
-        '''
-        Read sample log
-        '''
-        pass
-
-    def record_sample_log(self):
-        '''
-        Record the total sample times
-        '''
-        pass
 
     def get_user_answer(self):
         '''
@@ -370,13 +333,6 @@ class Verb(object):
                                self.verb_kanji, ' (', self.verb_base, '): '])
         self.user_answer = get_input(message)
 
-    def record(self):
-        '''
-        Record the sample history
-        Record the error log
-        Record the continue right log
-        '''
-
 
 class Practice(object):
     '''
@@ -388,9 +344,10 @@ class Practice(object):
         self.verbs = []
         self.verbs_base_avail = None
         self.verbs_kanji_avail = None
+        self.verbs_form_avail = None
         self.verbs_error = None
-        self.verbs_sample_history = None
         self.current_quiz_number = 0
+        self.practice_history = None
 
     def initial(self):
         '''
@@ -401,6 +358,76 @@ Please enter a int number: '
         self.total_quiz_number = int(get_input(total_quiz_number_help_info))
         self.read_verb_lib()
         self.read_form_lib()
+        self.load_practice_history()
+
+    def load_practice_history(self):
+        '''
+        Load practice history. If there isn't a history, set up one
+        '''
+        total_verbs_base = len(self.verbs_base_avail)
+        total_verbs_form = len(self.verbs_form_avail)
+        total_avail_verbs_number = total_verbs_base * total_verbs_form
+        # check whether the file exist
+        history_file = 'practice_history.csv'
+        history_exist = os.path.isfile(history_file)
+        if history_exist:
+            practice_history = pd.read_csv(history_file, index_col=0)
+            # all available in practice history?
+            for i in range(total_verbs_base):
+                if self.verbs_base_avail[i] not in \
+                        set(practice_history['verb_base'].tolist()):
+                    # add the verb
+                    for form in set(practice_history['verb_form'].tolist()):
+                        practice_history = practice_history.append(
+                            {'verb_base': self.verbs_base_avail[i],
+                             'verb_kanji': self.verbs_kanji_avail[i],
+                             'verb_form' : form,
+                             'sample_time': 0,
+                             'error_time': 0,
+                             'right_time': 0,
+                             'continue_error_time': 0,
+                             'continue_right_time': 0,
+                             'relative_weight': 3.0}, ignore_index=True)
+            for form in self.verbs_form_avail:
+                if form not in set(practice_history['verb_form'].tolist()):
+                    # add the form
+                    for j in range(total_verbs_base):
+                        practice_history = practice_history.append(
+                            {'verb_base': self.verbs_base_avail[j],
+                             'verb_kanji': self.verbs_kanji_avail[j],
+                             'verb_form' : form,
+                             'sample_time': 0,
+                             'error_time': 0,
+                             'right_time': 0,
+                             'continue_error_time': 0,
+                             'continue_right_time': 0,
+                             'relative_weight': 3.0}, ignore_index=True)
+            self.practice_history = practice_history
+            #print self.practice_history
+        else:
+            # initial the practice history
+            history_array = np.empty(shape=(total_avail_verbs_number, 9),
+                                     dtype=object)
+            # set up the dictionary of the verbs
+            for i in range(total_verbs_base):
+                for j in range(total_verbs_form):
+                    verb = Verb(self.verbs_base_avail[i],
+                                self.verbs_kanji_avail[i],
+                                self.verbs_form_avail[j])
+                    history_array[i*total_verbs_form + j] = \
+                        [verb.verb_base, verb.verb_kanji, verb.verb_form, 0, \
+                         0, 0, 0, 0, 1.0]
+            # put the data into dataframe
+            self.practice_history = pd.DataFrame(data=history_array,
+                                                 columns = ['verb_base',
+                                                            'verb_kanji',
+                                                            'verb_form',
+                                                            'sample_time',
+                                                            'error_time',
+                                                            'right_time',
+                                                            'continue_error_time',
+                                                            'continue_right_time',
+                                                            'relative_weight'])
 
     def sample_verb(self):
         '''
@@ -451,7 +478,50 @@ Please enter a int number: '
             verb.get_user_answer()
             verb.get_right_answer()
             verb.check_answer()
-            #v.record()
+            self.record(verb)
+
+    def record(self, verb):
+        '''
+        Record the practice history, include sample_time, error_time,
+        right_time, continue_error_time, continue_right_time,
+        relative_weight
+        '''
+        # Find the index of the verb
+        verb_index = self.practice_history.verb_base[
+            self.practice_history.verb_base == verb.verb_base].index.tolist()
+        form_index = self.practice_history.verb_form[
+            self.practice_history.verb_form == verb.verb_form].index.tolist()
+        found_index = list(set.intersection(set(verb_index), set(form_index)))
+        if len(found_index) == 1:
+            # found the verb
+            index = found_index[0]
+            self.practice_history.loc[index, 'sample_time'] += 1
+            if verb.error_flag:
+                self.practice_history.loc[index, 'error_time'] += 1
+                self.practice_history.loc[index, 'continue_error_time'] += 1
+                self.practice_history.loc[index, 'continue_right_time'] = 0
+            else:
+                self.practice_history.loc[index, 'right_time'] += 1
+                self.practice_history.loc[index, 'continue_right_time'] += 1
+                if self.practice_history.loc[index, 'continue_right_time'] > 5:
+                    self.practice_history.loc[index, 'continue_right_time'] = 0
+                    self.practice_history.loc[index, 'error_time'] = 0
+                self.practice_history.loc[index, 'continue_error_time'] = 0
+            # calculate the relative weight
+            # relative_weight = [1 +(5*continue_error_time) + (3*error_time)] /
+            #                   [ 1 + sample_time + right_time + 2*continue_right_time]
+            self.practice_history.loc[index, 'relative_weight'] = \
+                (1.0 + self.practice_history.loc[index, 'error_time'] * 3.0 +
+                 self.practice_history.loc[index, 'continue_error_time'] * 5.0) / \
+                (1.0 + self.practice_history.loc[index, 'sample_time'] +
+                 self.practice_history.loc[index, 'right_time'] +
+                 self.practice_history.loc[index, 'continue_right_time'] * 2)
+        else:
+            errormessage = ''.join(['Found more than one verb:', verb.verb_base,
+                                    verb.verb_form, '形 in practice_history!'])
+            raise ValueError(errormessage)
+        self.practice_history.to_csv('practice_history.csv')
+
 
 def get_input(info):
     '''
