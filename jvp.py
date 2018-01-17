@@ -329,7 +329,6 @@ class Verb(object):
         '''
         Give the quiz information, and then get the user answer
         '''
-        print self.verb_base, self.verb_kanji
         if self.has_kanji:
             message = ''.join(['\nPlease enter the ', self.verb_form, '形 of ',\
                                self.verb_kanji, ' (', self.verb_base, '): '])
