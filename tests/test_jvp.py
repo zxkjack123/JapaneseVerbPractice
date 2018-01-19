@@ -188,7 +188,7 @@ def turn_to_shiyi_test():
 
 def turn_to_beidong_test():
     '''
-    Turn a verb into 被动形
+    Turn a verb into 被动态
     '''
     verb1 = Verb('かく', '書く', '被动')
     verb1.get_right_answer()
@@ -205,6 +205,26 @@ def turn_to_beidong_test():
     verb3_s = Verb('する', 'None', '被动')
     verb3_s.get_right_answer()
     assert_equal(verb3_s.right_answer, ['される'])
+
+def turn_to_beidongshiyi_test():
+    '''
+    Turn a verb into 被动使役态
+    '''
+    verb1 = Verb('かく', '書く', '被动使役')
+    verb1.get_right_answer()
+    assert_equal(verb1.right_answer, ['書かされる', 'かかされる'])
+
+    verb2 = Verb('たべる', '食べる', '被动使役')
+    verb2.get_right_answer()
+    assert_equal(verb2.right_answer, ['食べさせられる', 'たべさせられる'])
+
+    verb3_k = Verb('くる', '来る', '被动使役')
+    verb3_k.get_right_answer()
+    assert_equal(verb3_k.right_answer, ['来させられる', 'こさせられる'])
+
+    verb3_s = Verb('する', 'None', '被动使役')
+    verb3_s.get_right_answer()
+    assert_equal(verb3_s.right_answer, ['させられる'])
 
 
 def test_alias_table():
