@@ -130,6 +130,22 @@ def turn_to_yizhi_test():
     verb3.get_right_answer()
     assert_equal(verb3.right_answer, ['来よう', 'こよう'])
 
+def turn_to_jiading_test():
+    '''
+    Turn a verb into 假定形
+    '''
+    verb1 = Verb('かく', '書く', '假定')
+    verb1.get_right_answer()
+    assert_equal(verb1.right_answer, ['書けば', 'かけば'])
+
+    verb2 = Verb('たべる', '食べる', '假定')
+    verb2.get_right_answer()
+    assert_equal(verb2.right_answer, ['食べれば', 'たべれば'])
+
+    verb3 = Verb('くる', '来る', '假定')
+    verb3.get_right_answer()
+    assert_equal(verb3.right_answer, ['来れば', 'くれば'])
+
 def test_alias_table():
     """This tests that the AliasTable class produces samples in the ratios
     consistent with the supplied PDF.
