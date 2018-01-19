@@ -142,6 +142,9 @@ class Verb(object):
         if self.verb_form == '意志':
             self.turn_to_yizhi()
             return
+        if self.verb_form == '命令':
+            self.turn_to_mingling()
+            return
         if self.verb_form == '假定':
             self.turn_to_jiading()
             return
@@ -297,6 +300,32 @@ class Verb(object):
                 self.right_answer.append('こない')
             if self.verb_base == 'する':
                 self.right_answer.append('しない')
+
+    def turn_to_mingling(self):
+        '''
+        Turn a verb into 命令形
+        '''
+        if self.verb_type == 1:
+            last_hira = self.verb_base[-3:]
+            hira = Hiragana(last_hira)
+            hira.change_vowel('e')
+            hira_answer = self.verb_base[0:-3] + hira.hiragana
+            if self.has_kanji:
+                kanji_answer = self.verb_kanji[0:-3] + hira.hiragana
+                self.right_answer.append(kanji_answer)
+            self.right_answer.append(hira_answer)
+        if self.verb_type == 2:
+            hira_answer = self.verb_base[0:-3] + 'ろ'
+            if self.has_kanji:
+                kanji_answer = self.verb_kanji[0:-3] + 'ろ'
+                self.right_answer.append(kanji_answer)
+            self.right_answer.append(hira_answer)
+        if self.verb_type == 3:
+            if self.verb_base == 'くる':
+                self.right_answer.append('来い')
+                self.right_answer.append('こい')
+            if self.verb_base == 'する':
+                self.right_answer.append('しろ')
 
     def turn_to_yizhi(self):
         '''

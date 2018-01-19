@@ -130,6 +130,23 @@ def turn_to_yizhi_test():
     verb3.get_right_answer()
     assert_equal(verb3.right_answer, ['来よう', 'こよう'])
 
+def turn_to_mingling_test():
+    '''
+    Test turn a verb into 命令形
+    '''
+    verb1 = Verb('かく', '書く', '命令')
+    verb1.get_right_answer()
+    assert_equal(verb1.right_answer, ['書け', 'かけ'])
+
+    verb2 = Verb('みる', '見る', '命令')
+    verb2.get_right_answer()
+    assert_equal(verb2.right_answer, ['見ろ', 'みろ'])
+
+    verb3 = Verb('くる', '来る', '命令')
+    verb3.get_right_answer()
+    assert_equal(verb3.right_answer, ['来い', 'こい'])
+
+
 def turn_to_jiading_test():
     '''
     Turn a verb into 假定形
