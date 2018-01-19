@@ -166,6 +166,27 @@ def turn_to_keneng_test():
     verb3_s.get_right_answer()
     assert_equal(verb3_s.right_answer, ['できる'])
 
+def turn_to_shiyi_test():
+    '''
+    Turn a verb into 使役形
+    '''
+    verb1 = Verb('かく', '書く', '使役')
+    verb1.get_right_answer()
+    assert_equal(verb1.right_answer, ['書かせる', 'かかせる'])
+
+    verb2 = Verb('たべる', '食べる', '使役')
+    verb2.get_right_answer()
+    assert_equal(verb2.right_answer, ['食べさせる', 'たべさせる'])
+
+    verb3_k = Verb('くる', '来る', '使役')
+    verb3_k.get_right_answer()
+    assert_equal(verb3_k.right_answer, ['来させる', 'こさせる'])
+
+    verb3_s = Verb('する', 'None', '使役')
+    verb3_s.get_right_answer()
+    assert_equal(verb3_s.right_answer, ['させる'])
+
+
 def test_alias_table():
     """This tests that the AliasTable class produces samples in the ratios
     consistent with the supplied PDF.

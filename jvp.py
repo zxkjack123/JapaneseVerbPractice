@@ -148,6 +148,9 @@ class Verb(object):
         if self.verb_form == '可能':
             self.turn_to_keneng()
             return
+        if self.verb_form == '使役':
+            self.turn_to_shiyi()
+            return
         raise ValueError('Unsupported form')
 
     def turn_to_masu(self):
@@ -341,6 +344,33 @@ class Verb(object):
             if self.verb_base == 'する':
                 self.right_answer.append('できる')
 
+    def turn_to_shiyi(self):
+        '''
+        Turn a verb into 使役形
+        '''
+        if self.verb_type == 1:
+            last_hira = self.verb_base[-3:]
+            hira = Hiragana(last_hira)
+            hira.change_vowel('a')
+            if hira.hiragana == 'あ':
+                hira.hiragana = 'わ'
+            hira_answer = self.verb_base[0:-3] + hira.hiragana + 'せる'
+            if self.has_kanji:
+                kanji_answer = self.verb_kanji[0:-3] + hira.hiragana + 'せる'
+                self.right_answer.append(kanji_answer)
+            self.right_answer.append(hira_answer)
+        if self.verb_type == 2:
+            hira_answer = self.verb_base[0:-3] + 'させる'
+            if self.has_kanji:
+                kanji_answer = self.verb_kanji[0:-3] + 'させる'
+                self.right_answer.append(kanji_answer)
+            self.right_answer.append(hira_answer)
+        if self.verb_type == 3:
+            if self.verb_base == 'くる':
+                self.right_answer.append('来させる')
+                self.right_answer.append('こさせる')
+            if self.verb_base == 'する':
+                self.right_answer.append('させる')
 
     def turn_to_jiading(self):
         '''
