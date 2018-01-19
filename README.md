@@ -28,9 +28,8 @@ contains verb form the text book "标准日本语初级上册". I will add the v
 other books when I learned more.
 
 The conjugation forms (or types) come form the file: 'Japanese\_verb\_form.jvp'.
-Currently, only 'ます' (masu), 'て' (te), 'た' (ta)and 'ない' (nai) are
-supported, as they are the content of "标准日本语初级上册". Also, I will add 
-other conjugation forms when I learned more.
+Current supported conjugation include: 基本形 -> (ます形，て形, た形, ない形，
+意志形，命令形, 假定形, 可能态, 使役态, 被动态, 被动使役态).
 
 ## To do list
 - [x] Add error history records. Increase the practice time of the verbs that

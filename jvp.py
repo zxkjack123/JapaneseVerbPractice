@@ -509,11 +509,17 @@ class Verb(object):
         '''
         Give the quiz information, and then get the user answer
         '''
+        key_word = ''
+        if self.verb_form in ('ます', 'て', 'た', 'ない', '意志', '命令', '假定'):
+            key_word = '形'
+        if self.verb_form in ('可能', '被动', '自发', '使役', '被动使役'):
+            key_word = '态'
+
         if self.has_kanji:
-            message = ''.join(['\nPlease enter the ', self.verb_form, '形 of ',\
+            message = ''.join(['\nPlease enter the ', self.verb_form, key_word, ' of ',\
                                self.verb_kanji, ' (', self.verb_base, '): '])
         else:
-            message = ''.join(['\nPlease enter the ', self.verb_form, '形 of ',\
+            message = ''.join(['\nPlease enter the ', self.verb_form, key_word, ' of ',\
                                self.verb_base, ': '])
         self.user_answer = get_input(message)
 
