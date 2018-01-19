@@ -114,6 +114,22 @@ def verb_turn_to_nai_test():
     verb3.get_right_answer()
     assert_equal(verb3.right_answer, ['来ない', 'こない'])
 
+def turn_to_yizhi_test():
+    '''
+    Test turn a verb into 意志形
+    '''
+    verb1 = Verb('かく', '書く', '意志')
+    verb1.get_right_answer()
+    assert_equal(verb1.right_answer, ['書こう', 'かこう'])
+
+    verb2 = Verb('みる', '見る', '意志')
+    verb2.get_right_answer()
+    assert_equal(verb2.right_answer, ['見よう', 'みよう'])
+
+    verb3 = Verb('くる', '来る', '意志')
+    verb3.get_right_answer()
+    assert_equal(verb3.right_answer, ['来よう', 'こよう'])
+
 def test_alias_table():
     """This tests that the AliasTable class produces samples in the ratios
     consistent with the supplied PDF.

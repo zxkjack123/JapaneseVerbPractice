@@ -139,6 +139,9 @@ class Verb(object):
         if self.verb_form == 'ない':
             self.turn_to_nai()
             return
+        if self.verb_form == '意志':
+            self.turn_to_yizhi()
+            return
         raise ValueError('Unsupported form')
 
     def turn_to_masu(self):
@@ -279,6 +282,32 @@ class Verb(object):
                 self.right_answer.append('こない')
             if self.verb_base == 'する':
                 self.right_answer.append('しない')
+
+    def turn_to_yizhi(self):
+        '''
+        Turn a verb into 意志形
+        '''
+        if self.verb_type == 1:
+            last_hira = self.verb_base[-3:]
+            hira = Hiragana(last_hira)
+            hira.change_vowel('o')
+            hira_answer = self.verb_base[0:-3] + hira.hiragana + 'う'
+            if self.has_kanji:
+                kanji_answer = self.verb_kanji[0:-3] + hira.hiragana + 'う'
+                self.right_answer.append(kanji_answer)
+            self.right_answer.append(hira_answer)
+        if self.verb_type == 2:
+            hira_answer = self.verb_base[0:-3] + 'よう'
+            if self.has_kanji:
+                kanji_answer = self.verb_kanji[0:-3] + 'よう'
+                self.right_answer.append(kanji_answer)
+            self.right_answer.append(hira_answer)
+        if self.verb_type == 3:
+            if self.verb_base == 'くる':
+                self.right_answer.append('来よう')
+                self.right_answer.append('こよう')
+            if self.verb_base == 'する':
+                self.right_answer.append('しよう')
 
     def get_verb_type(self):
         '''
