@@ -620,7 +620,6 @@ class Practice(object):
                              'continue_right_time': 0,
                              'relative_weight': 3.0}, ignore_index=True)
             self.practice_history = practice_history
-            #print self.practice_history
         else:
             # initial the practice history
             history_array = np.empty(shape=(total_avail_verbs_number, 9),
@@ -738,19 +737,19 @@ Please enter a int number: '
         return the index number
         '''
         found_index = []
-        verb_index = self.practice_history.verb_base[
+        base_index = self.practice_history.verb_base[
             self.practice_history.verb_base == verb.verb_base].index.tolist()
         form_index = self.practice_history.verb_form[
             self.practice_history.verb_form == verb.verb_form].index.tolist()
         kanji_index = self.practice_history.verb_kanji[
             self.practice_history.verb_kanji == verb.verb_kanji].index.tolist()
         if verb.has_kanji:
-            found_index = list(set.intersection(set(verb_index), set(form_index),
+            found_index = list(set.intersection(set(base_index), set(form_index),
                                                 set(kanji_index)))
         else:
-            base_form_index = list(set.intersection(set(verb_index), set(form_index)))
+            base_form_index = list(set.intersection(set(base_index), set(form_index)))
             for index in base_form_index:
-                if not isinstance(self.practice_history.verb_kanji[index], str):
+                if (not isinstance(self.practice_history.verb_kanji[index], str)) or (self.practice_history.verb_kanji[index] == 'None'):
                     found_index.append(index)
 
         if len(found_index) == 1:

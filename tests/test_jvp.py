@@ -276,3 +276,8 @@ def find_verb_in_practice_history_test():
     index = p.find_verb_in_practice_history(verb2)
     assert(index >= 0)
 
+    verb3 = Verb('すく', 'None', '命令')
+    p = Practice()
+    index = p.find_verb_in_practice_history(verb3)
+    assert(index >= 0)
+
