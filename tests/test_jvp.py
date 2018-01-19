@@ -186,6 +186,26 @@ def turn_to_shiyi_test():
     verb3_s.get_right_answer()
     assert_equal(verb3_s.right_answer, ['させる'])
 
+def turn_to_beidong_test():
+    '''
+    Turn a verb into 被动形
+    '''
+    verb1 = Verb('かく', '書く', '被动')
+    verb1.get_right_answer()
+    assert_equal(verb1.right_answer, ['書かれる', 'かかれる'])
+
+    verb2 = Verb('たべる', '食べる', '被动')
+    verb2.get_right_answer()
+    assert_equal(verb2.right_answer, ['食べられる', 'たべられる'])
+
+    verb3_k = Verb('くる', '来る', '被动')
+    verb3_k.get_right_answer()
+    assert_equal(verb3_k.right_answer, ['来られる', 'こられる'])
+
+    verb3_s = Verb('する', 'None', '被动')
+    verb3_s.get_right_answer()
+    assert_equal(verb3_s.right_answer, ['される'])
+
 
 def test_alias_table():
     """This tests that the AliasTable class produces samples in the ratios

@@ -151,6 +151,9 @@ class Verb(object):
         if self.verb_form == '使役':
             self.turn_to_shiyi()
             return
+        if self.verb_form == '被动':
+            self.turn_to_beidong()
+            return
         raise ValueError('Unsupported form')
 
     def turn_to_masu(self):
@@ -371,6 +374,34 @@ class Verb(object):
                 self.right_answer.append('こさせる')
             if self.verb_base == 'する':
                 self.right_answer.append('させる')
+
+    def turn_to_beidong(self):
+        '''
+        Turn a verb into 被动形
+        '''
+        if self.verb_type == 1:
+            last_hira = self.verb_base[-3:]
+            hira = Hiragana(last_hira)
+            hira.change_vowel('a')
+            if hira.hiragana == 'あ':
+                hira.hiragana = 'わ'
+            hira_answer = self.verb_base[0:-3] + hira.hiragana + 'れる'
+            if self.has_kanji:
+                kanji_answer = self.verb_kanji[0:-3] + hira.hiragana + 'れる'
+                self.right_answer.append(kanji_answer)
+            self.right_answer.append(hira_answer)
+        if self.verb_type == 2:
+            hira_answer = self.verb_base[0:-3] + 'られる'
+            if self.has_kanji:
+                kanji_answer = self.verb_kanji[0:-3] + 'られる'
+                self.right_answer.append(kanji_answer)
+            self.right_answer.append(hira_answer)
+        if self.verb_type == 3:
+            if self.verb_base == 'くる':
+                self.right_answer.append('来られる')
+                self.right_answer.append('こられる')
+            if self.verb_base == 'する':
+                self.right_answer.append('される')
 
     def turn_to_jiading(self):
         '''
