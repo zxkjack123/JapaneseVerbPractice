@@ -146,6 +146,26 @@ def turn_to_jiading_test():
     verb3.get_right_answer()
     assert_equal(verb3.right_answer, ['来れば', 'くれば'])
 
+def turn_to_keneng_test():
+    '''
+    Turn a verb into 可能形
+    '''
+    verb1 = Verb('かく', '書く', '可能')
+    verb1.get_right_answer()
+    assert_equal(verb1.right_answer, ['書ける', 'かける'])
+
+    verb2 = Verb('たべる', '食べる', '可能')
+    verb2.get_right_answer()
+    assert_equal(verb2.right_answer, ['食べられる', 'たべられる'])
+
+    verb3_k = Verb('くる', '来る', '可能')
+    verb3_k.get_right_answer()
+    assert_equal(verb3_k.right_answer, ['来られる', 'こられる'])
+
+    verb3_s = Verb('する', 'None', '可能')
+    verb3_s.get_right_answer()
+    assert_equal(verb3_s.right_answer, ['できる'])
+
 def test_alias_table():
     """This tests that the AliasTable class produces samples in the ratios
     consistent with the supplied PDF.

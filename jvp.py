@@ -145,6 +145,9 @@ class Verb(object):
         if self.verb_form == '假定':
             self.turn_to_jiading()
             return
+        if self.verb_form == '可能':
+            self.turn_to_keneng()
+            return
         raise ValueError('Unsupported form')
 
     def turn_to_masu(self):
@@ -311,6 +314,33 @@ class Verb(object):
                 self.right_answer.append('こよう')
             if self.verb_base == 'する':
                 self.right_answer.append('しよう')
+
+    def turn_to_keneng(self):
+        '''
+        Turn a verb into 可能形
+        '''
+        if self.verb_type == 1:
+            last_hira = self.verb_base[-3:]
+            hira = Hiragana(last_hira)
+            hira.change_vowel('e')
+            hira_answer = self.verb_base[0:-3] + hira.hiragana + 'る'
+            if self.has_kanji:
+                kanji_answer = self.verb_kanji[0:-3] + hira.hiragana + 'る'
+                self.right_answer.append(kanji_answer)
+            self.right_answer.append(hira_answer)
+        if self.verb_type == 2:
+            hira_answer = self.verb_base[0:-3] + 'られる'
+            if self.has_kanji:
+                kanji_answer = self.verb_kanji[0:-3] + 'られる'
+                self.right_answer.append(kanji_answer)
+            self.right_answer.append(hira_answer)
+        if self.verb_type == 3:
+            if self.verb_base == 'くる':
+                self.right_answer.append('来られる')
+                self.right_answer.append('こられる')
+            if self.verb_base == 'する':
+                self.right_answer.append('できる')
+
 
     def turn_to_jiading(self):
         '''
