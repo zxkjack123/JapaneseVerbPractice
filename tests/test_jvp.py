@@ -136,9 +136,13 @@ def find_verb_in_practice_history_test():
     '''
     This function test that a verb can be find out in the practice history
     '''
-    verb = Verb('とる', '撮る', 'ます')
+    verb1 = Verb('とる', '撮る', 'ます')
     p = Practice()
-    index = p.find_verb_in_practice_history(verb)
+    index = p.find_verb_in_practice_history(verb1)
     assert(index >= 0)
 
+    verb2 = Verb('とる', 'None', 'ます')
+    p = Practice()
+    index = p.find_verb_in_practice_history(verb2)
+    assert(index >= 0)
 

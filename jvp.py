@@ -522,6 +522,7 @@ Please enter a int number: '
         Find the verb in the practice history
         return the index number
         '''
+        found_index = []
         verb_index = self.practice_history.verb_base[
             self.practice_history.verb_base == verb.verb_base].index.tolist()
         form_index = self.practice_history.verb_form[
@@ -532,7 +533,10 @@ Please enter a int number: '
             found_index = list(set.intersection(set(verb_index), set(form_index),
                                                 set(kanji_index)))
         else:
-            found_index = list(set.intersection(set(verb_index), set(form_index)))
+            base_form_index = list(set.intersection(set(verb_index), set(form_index)))
+            for index in base_form_index:
+                if not isinstance(self.practice_history.verb_kanji[index], str):
+                    found_index.append(index)
 
         if len(found_index) == 1:
             index = found_index[0]
