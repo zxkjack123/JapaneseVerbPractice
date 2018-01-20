@@ -288,6 +288,9 @@ class Verb(object):
                 kanji_answer = self.verb_kanji[0:-3] + hira.hiragana + 'ない'
                 self.right_answer.append(kanji_answer)
             self.right_answer.append(hira_answer)
+            # special verb: ある
+            if self.verb_base == 'ある':
+                self.right_answer = ['ない']
         if self.verb_type == 2:
             hira_answer = self.verb_base[0:-3] + 'ない'
             if self.has_kanji:
