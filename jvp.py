@@ -727,8 +727,8 @@ Please enter a int number: '
         # relative_weight = [1 +(5*continue_error_time) + (3*error_time)] /
         #                   [ 1 + sample_time + right_time + 2*continue_right_time]
         self.practice_history.loc[index, 'relative_weight'] = \
-            (1.0 + self.practice_history.loc[index, 'error_time'] * 3.0 +
-             self.practice_history.loc[index, 'continue_error_time'] * 5.0) / \
+            (1.0 + self.practice_history.loc[index, 'error_time'] * 6.0 +
+             self.practice_history.loc[index, 'continue_error_time'] * 10.0) / \
             (1.0 + self.practice_history.loc[index, 'sample_time'] +
              self.practice_history.loc[index, 'right_time'] +
              self.practice_history.loc[index, 'continue_right_time'] * 2)
