@@ -157,8 +157,8 @@ class Verb(object):
         if self.verb_form == '被动':
             self.turn_to_beidong()
             return
-        if self.verb_form == '被动使役':
-            self.turn_to_beidongshiyi()
+        if self.verb_form == '使役被动':
+            self.turn_to_shiyibeidong()
             return
         raise ValueError('Unsupported form')
 
@@ -438,9 +438,9 @@ class Verb(object):
             if self.verb_base == 'する':
                 self.right_answer.append('される')
 
-    def turn_to_beidongshiyi(self):
+    def turn_to_shiyibeidong(self):
         '''
-        Turn a verb into 被动使役态
+        Turn a verb into 使役被动态
         '''
         if self.verb_type == 1:
             last_hira = self.verb_base[-3:]
