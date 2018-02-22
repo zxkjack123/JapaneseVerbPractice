@@ -31,8 +31,3 @@ The conjugation forms (or types) come form the file: 'Japanese\_verb\_form.jvp'.
 Current supported conjugation include: 基本形 -> (ます形，て形, た形, ない形，
 意志形，命令形, 假定形, 可能态, 使役态, 被动态, 被动使役态).
 
-## To do list
-- [x] Add error history records. Increase the practice time of the verbs that
-user made mistake.
-- [  ] Find voice resources of the verbs, play the voice when the question
-jumps out. Add listening practice.
