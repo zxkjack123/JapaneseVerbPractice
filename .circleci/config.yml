@@ -6,5 +6,6 @@ jobs:
     steps:
       - checkout
       - run: |
+         echo "hello world!"
          cd tests
          nosetests test_jvp.py
