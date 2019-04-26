@@ -8,4 +8,4 @@ jobs:
       - run: |
          echo "hello world!"
          cd tests
-         nosetests test_jvp.py
+         nosetests3 test_jvp.py
