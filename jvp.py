@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
-
+from __future__ import print_function
 import os
 from sys import version_info
 import numpy as np
@@ -535,7 +535,7 @@ class Verb(object):
                         right_answer = ' '.join([right_answer, 'or', answer])
                 right_answer = ''.join([right_answer, ']'])
             errormessage = ''.join(['Wrong answer! Correct answer: ', right_answer])
-            print errormessage
+            print(errormessage)
 
     def get_user_answer(self):
         '''
@@ -767,7 +767,7 @@ Please enter a int number: '
                 errormessage = ''.join(['Found more than one verb:', verb.verb_base,
                                         '的', verb.verb_form,
                                         '形 in practice_history!'])
-            print found_index
+            print(found_index)
             raise ValueError(errormessage)
             return -1
 
