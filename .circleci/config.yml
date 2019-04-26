@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: zxkjack123/python3_jvp
+      - image: zxkjack123/python3_jvp:latest
     steps:
       - checkout
       - run: |
