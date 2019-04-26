@@ -2,7 +2,9 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/ruby:2.4.1
+      - image: zxkjack123/python3_jvp
     steps:
       - checkout
-      - run: echo "A first hello"
+      - run: |
+         cd tests
+         nosetests test_jvp.py
